@@ -4,21 +4,7 @@
 #include "callback_button.hpp"
 
 
-void CreateModule(Model* model) {
-    engine::Module* module = model->createModule();
-    APP->engine->addModule(module);
-    ModuleWidget* moduleWidget = model->createModuleWidget(module);
-    APP->scene->rack->addModuleAtMouse(moduleWidget);
-    // Load template preset
-    moduleWidget->loadTemplate();
-
-    // history::ModuleAdd
-    history::ModuleAdd* h = new history::ModuleAdd;
-    h->name = "create module";
-    // This serializes the module so redoing returns to the current state.
-    h->setModule(moduleWidget);
-    APP->history->push(h);
-}
+static void CreateModule(Model* model);
 
 template<typename Iter, typename RandomGenerator>
 Iter select_randomly(Iter start, Iter end, RandomGenerator& g) {
@@ -86,3 +72,21 @@ struct AleaWidget : ModuleWidget {
 
 
 Model* alea = createModel<Alea, AleaWidget>("alea");
+
+
+#undef ModuleWidget
+static void CreateModule(Model* model) {
+    engine::Module* module = model->createModule();
+    APP->engine->addModule(module);
+    ModuleWidget* moduleWidget = model->createModuleWidget(module);
+    APP->scene->rack->addModuleAtMouse(moduleWidget);
+    // Load template preset
+    moduleWidget->loadTemplate();
+
+    // history::ModuleAdd
+    history::ModuleAdd* h = new history::ModuleAdd;
+    h->name = "create module";
+    // This serializes the module so redoing returns to the current state.
+    h->setModule(moduleWidget);
+    APP->history->push(h);
+}
